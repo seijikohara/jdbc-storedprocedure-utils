@@ -15,12 +15,12 @@ public class Procedure extends StoredProcedure {
 	}
 
 	public Return execute(Connection connection, Object... parameters) {
-		String paramPlaceHolder = generateParameterPraceHolder(parameters.length);
+		String paramPlaceHolder = generateParameterPlaceHolder(parameters.length);
 		String sql = String.format("{ call %s(%s) }", name, paramPlaceHolder);
 
 		try {
 			CallableStatement statement = connection.prepareCall(sql);
-			registerParamters(statement, PARAMETER_START_INDEX, parameters);
+			registerParameters(statement, PARAMETER_START_INDEX, parameters);
 			statement.executeQuery();
 			return new Return(statement, parameters);
 		} catch (SQLException e) {
