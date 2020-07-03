@@ -12,8 +12,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.relaxism.utils.jdbc.parameter.InParamater;
-import net.relaxism.utils.jdbc.parameter.OutParamater;
+import net.relaxism.utils.jdbc.parameter.InParameter;
+import net.relaxism.utils.jdbc.parameter.OutParameter;
 import net.relaxism.utils.jdbc.parameter.Parameter;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -32,29 +32,29 @@ public abstract class StoredProcedure {
 		return name;
 	}
 
-	protected void registerParamters(CallableStatement statement,
+	protected void registerParameters(CallableStatement statement,
 			int startIndex, Object... parameters) throws SQLException {
 		int index = startIndex;
 		for (Object parameter : parameters) {
-			if (parameter instanceof OutParamater) {
-				Parameter outParamater = (Parameter) parameter;
-				if (outParamater.getScaleOrLength() == null) {
-					statement.registerOutParameter(index, outParamater
+			if (parameter instanceof OutParameter) {
+				Parameter outParameter = (Parameter) parameter;
+				if (outParameter.getScaleOrLength() == null) {
+					statement.registerOutParameter(index, outParameter
 							.getType().getTypeCode());
 				} else {
-					statement.registerOutParameter(index, outParamater
-							.getType().getTypeCode(), outParamater
+					statement.registerOutParameter(index, outParameter
+							.getType().getTypeCode(), outParameter
 							.getScaleOrLength());
 				}
-			} else if (parameter instanceof InParamater) {
-				InParamater inParamater = (InParamater) parameter;
-				if (inParamater.getScaleOrLength() == null) {
-					statement.setObject(index, inParamater.getValue(),
-							inParamater.getType().getTypeCode());
+			} else if (parameter instanceof InParameter) {
+				InParameter inParameter = (InParameter) parameter;
+				if (inParameter.getScaleOrLength() == null) {
+					statement.setObject(index, inParameter.getValue(),
+							inParameter.getType().getTypeCode());
 				} else {
-					statement.setObject(index, inParamater.getValue(),
-							inParamater.getType().getTypeCode(),
-							inParamater.getScaleOrLength());
+					statement.setObject(index, inParameter.getValue(),
+							inParameter.getType().getTypeCode(),
+							inParameter.getScaleOrLength());
 				}
 
 			} else {
@@ -64,7 +64,7 @@ public abstract class StoredProcedure {
 		}
 	}
 
-	protected String generateParameterPraceHolder(int count) {
+	protected String generateParameterPlaceHolder(int count) {
 		if (count <= 0) {
 			return "";
 		}
@@ -96,109 +96,109 @@ public abstract class StoredProcedure {
 
 	protected static abstract class Return {
 
-		protected final Map<OutParamater, Object> outParamaters;
+		protected final Map<OutParameter, Object> outParameters;
 
 		public Return(CallableStatement statement, int outParamStartIndex,
 				Object... parameters) throws SQLException {
-			this.outParamaters = Collections
+			this.outParameters = Collections
 					.unmodifiableMap(processOutParameters(statement,
 							outParamStartIndex, parameters));
 		}
 
-		private Map<OutParamater, Object> processOutParameters(
+		private Map<OutParameter, Object> processOutParameters(
 				CallableStatement statement, int outParamStartIndex,
 				Object... parameters) throws SQLException {
-			Map<OutParamater, Object> outParamaters = new HashMap<OutParamater, Object>();
+			Map<OutParameter, Object> outParameters = new HashMap<OutParameter, Object>();
 			int paramIndex = outParamStartIndex;
 			for (Object param : parameters) {
-				if (param instanceof OutParamater) {
-					OutParamater outParamater = (OutParamater) param;
-					outParamaters.put(outParamater,
+				if (param instanceof OutParameter) {
+					OutParameter outParameter = (OutParameter) param;
+					outParameters.put(outParameter,
 							statement.getObject(paramIndex));
 				}
 				paramIndex++;
 			}
-			return outParamaters;
+			return outParameters;
 		}
 
-		public Array getArray(OutParamater outParamater) {
-			return (Array) outParamaters.get(outParamater);
+		public Array getArray(OutParameter outParameter) {
+			return (Array) outParameters.get(outParameter);
 		}
 
-		public BigDecimal getBigDecimal(OutParamater outParamater) {
-			return (BigDecimal) outParamaters.get(outParamater);
+		public BigDecimal getBigDecimal(OutParameter outParameter) {
+			return (BigDecimal) outParameters.get(outParameter);
 		}
 
-		public Blob getBlob(OutParamater outParamater) {
-			return (Blob) outParamaters.get(outParamater);
+		public Blob getBlob(OutParameter outParameter) {
+			return (Blob) outParameters.get(outParameter);
 		}
 
-		public Boolean getBoolean(OutParamater outParamater) {
-			return (Boolean) outParamaters.get(outParamater);
+		public Boolean getBoolean(OutParameter outParameter) {
+			return (Boolean) outParameters.get(outParameter);
 		}
 
-		public Byte getByte(OutParamater outParamater) {
-			return (Byte) outParamaters.get(outParamater);
+		public Byte getByte(OutParameter outParameter) {
+			return (Byte) outParameters.get(outParameter);
 		}
 
-		public byte[] getBytes(OutParamater outParamater) {
-			return (byte[]) outParamaters.get(outParamater);
+		public byte[] getBytes(OutParameter outParameter) {
+			return (byte[]) outParameters.get(outParameter);
 		}
 
-		public Clob getClob(OutParamater outParamater) {
-			return (Clob) outParamaters.get(outParamater);
+		public Clob getClob(OutParameter outParameter) {
+			return (Clob) outParameters.get(outParameter);
 		}
 
-		public java.sql.Date getDate(OutParamater outParamater) {
-			return (java.sql.Date) outParamaters.get(outParamater);
+		public java.sql.Date getDate(OutParameter outParameter) {
+			return (java.sql.Date) outParameters.get(outParameter);
 		}
 
-		public Double getDouble(OutParamater outParamater) {
-			return (Double) outParamaters.get(outParamater);
+		public Double getDouble(OutParameter outParameter) {
+			return (Double) outParameters.get(outParameter);
 		}
 
-		public Float getFloat(OutParamater outParamater) {
-			return (Float) outParamaters.get(outParamater);
+		public Float getFloat(OutParameter outParameter) {
+			return (Float) outParameters.get(outParameter);
 		}
 
-		public Integer getInteger(OutParamater outParamater) {
-			return (Integer) outParamaters.get(outParamater);
+		public Integer getInteger(OutParameter outParameter) {
+			return (Integer) outParameters.get(outParameter);
 		}
 
-		public Long getLong(OutParamater outParamater) {
-			return (Long) outParamaters.get(outParamater);
+		public Long getLong(OutParameter outParameter) {
+			return (Long) outParameters.get(outParameter);
 		}
 
-		public Object getObject(OutParamater outParamater) {
-			return outParamaters.get(outParamater);
+		public Object getObject(OutParameter outParameter) {
+			return outParameters.get(outParameter);
 		}
 
-		public Ref getRef(OutParamater outParamater) {
-			return (Ref) outParamaters.get(outParamater);
+		public Ref getRef(OutParameter outParameter) {
+			return (Ref) outParameters.get(outParameter);
 		}
 
-		public RowId getRowId(OutParamater outParamater) {
-			return (RowId) outParamaters.get(outParamater);
+		public RowId getRowId(OutParameter outParameter) {
+			return (RowId) outParameters.get(outParameter);
 		}
 
-		public Short getShort(OutParamater outParamater) {
-			return (Short) outParamaters.get(outParamater);
+		public Short getShort(OutParameter outParameter) {
+			return (Short) outParameters.get(outParameter);
 		}
 
-		public String getString(OutParamater outParamater) {
-			return (String) outParamaters.get(outParamater);
+		public String getString(OutParameter outParameter) {
+			return (String) outParameters.get(outParameter);
 		}
 
-		public java.sql.Time getTime(OutParamater outParamater) {
-			return (java.sql.Time) outParamaters.get(outParamater);
+		public java.sql.Time getTime(OutParameter outParameter) {
+			return (java.sql.Time) outParameters.get(outParameter);
 		}
 
-		public java.sql.Timestamp getTimestamp(OutParamater outParamater) {
-			return (java.sql.Timestamp) outParamaters.get(outParamater);
+		public java.sql.Timestamp getTimestamp(OutParameter outParameter) {
+			return (java.sql.Timestamp) outParameters.get(outParameter);
 		}
 
-		public Map<OutParamater, Object> getOutParamaters() {
-			return outParamaters;
+		public Map<OutParameter, Object> getOutParameters() {
+			return outParameters;
 		}
 
 		@Override
