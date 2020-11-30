@@ -1,5 +1,6 @@
 package net.relaxism.utils.jdbc.procedure;
 
+import lombok.val;
 import net.relaxism.utils.jdbc.SQLRuntimeException;
 
 import java.sql.CallableStatement;
@@ -10,16 +11,16 @@ public class Procedure extends StoredProcedure {
 
     private static final int PARAMETER_START_INDEX = 1;
 
-    public Procedure(String name) {
+    public Procedure(final String name) {
         super(name);
     }
 
-    public Return execute(Connection connection, Object... parameters) {
-        String paramPlaceHolder = generateParameterPlaceHolder(parameters.length);
-        String sql = String.format("{ call %s(%s) }", name, paramPlaceHolder);
+    public Return execute(final Connection connection, final Object... parameters) {
+        val paramPlaceHolder = generateParameterPlaceHolder(parameters.length);
+        val sql = String.format("{ call %s(%s) }", name, paramPlaceHolder);
 
         try {
-            CallableStatement statement = connection.prepareCall(sql);
+            val statement = connection.prepareCall(sql);
             registerParameters(statement, PARAMETER_START_INDEX, parameters);
             statement.executeQuery();
             return new Return(statement, parameters);
@@ -30,8 +31,7 @@ public class Procedure extends StoredProcedure {
 
     public static class Return extends StoredProcedure.Return {
 
-        public Return(CallableStatement statement, Object... parameters)
-            throws SQLException {
+        public Return(final CallableStatement statement, final Object... parameters) throws SQLException {
             super(statement, PARAMETER_START_INDEX, parameters);
         }
 

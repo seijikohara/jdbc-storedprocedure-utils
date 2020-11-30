@@ -1,5 +1,7 @@
 package net.relaxism.utils.jdbc.procedure;
 
+import lombok.Getter;
+import lombok.val;
 import net.relaxism.utils.jdbc.SQLRuntimeException;
 import net.relaxism.utils.jdbc.SQLType;
 
@@ -14,13 +16,14 @@ public class Function extends StoredProcedure {
         super(name);
     }
 
-    public Return execute(Connection connection, SQLType returnType,
-                          Object... parameters) {
-        String paramPlaceHolder = generateParameterPlaceHolder(parameters.length);
-        String sql = String.format("{ ? = call %s(%s) }", name,
+    public Return execute(final Connection connection,
+                          final SQLType returnType,
+                          final Object... parameters) {
+        val paramPlaceHolder = generateParameterPlaceHolder(parameters.length);
+        val sql = String.format("{ ? = call %s(%s) }", name,
             paramPlaceHolder);
         try {
-            CallableStatement statement = connection.prepareCall(sql);
+            val statement = connection.prepareCall(sql);
             statement.registerOutParameter(1, returnType.getTypeCode());
             registerParameters(statement, PARAMETER_START_INDEX, parameters);
             statement.executeQuery();
@@ -32,22 +35,17 @@ public class Function extends StoredProcedure {
 
     public static class Return extends StoredProcedure.Return {
 
+        @Getter
         public final SQLType returnType;
+        @Getter
         public final Object returnValue;
 
-        public Return(CallableStatement statement, SQLType returnType,
-                      Object... parameters) throws SQLException {
+        public Return(final CallableStatement statement,
+                      final SQLType returnType,
+                      final Object... parameters) throws SQLException {
             super(statement, PARAMETER_START_INDEX, parameters);
             this.returnType = returnType;
             this.returnValue = statement.getObject(1);
-        }
-
-        public SQLType getReturnType() {
-            return returnType;
-        }
-
-        public Object getReturnObject() {
-            return returnValue;
         }
 
         public Array getReturnArray() {

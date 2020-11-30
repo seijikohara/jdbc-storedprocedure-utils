@@ -1,7 +1,11 @@
 package net.relaxism.utils.jdbc;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
 import java.sql.Types;
 
+@AllArgsConstructor
 public enum SQLType {
     ARRAY(Types.ARRAY),
     BIGINT(Types.BIGINT),
@@ -40,15 +44,8 @@ public enum SQLType {
     VARBINARY(Types.VARBINARY),
     VARCHAR(Types.VARCHAR);
 
+    @Getter
     private final int typeCode;
-
-    private SQLType(int typeCode) {
-        this.typeCode = typeCode;
-    }
-
-    public int getTypeCode() {
-        return typeCode;
-    }
 
 }
 
