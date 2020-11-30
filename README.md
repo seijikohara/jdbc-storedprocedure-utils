@@ -1,4 +1,7 @@
 # jdbc-storedprocedure-utils
+
+![Java CI with Maven](https://github.com/seijikohara/jdbc-storedprocedure-utils/workflows/Java%20CI%20with%20Maven/badge.svg)
+
 Stored procedures utils for JDBC
 
 ## Usage
